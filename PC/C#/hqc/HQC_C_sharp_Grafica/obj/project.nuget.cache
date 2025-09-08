@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "HU8FQ8bXrbkQct9HvjK6mxb5i5gBvbX5EKO4va2lznNRuJTIyFfBd5nDsmoKhopgfhqc3BBYAmsp7J3FeZbFiQ==",
+  "success": true,
+  "projectFilePath": "/home/vant/Documentos/TFG/TFG/PC/C#/hqc/HQC_C_sharp_Grafica/HQC_C_sharp_Grafica.csproj",
+  "expectedPackageFiles": [
+    "/home/vant/.nuget/packages/bouncycastle.cryptography/2.1.1/bouncycastle.cryptography.2.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

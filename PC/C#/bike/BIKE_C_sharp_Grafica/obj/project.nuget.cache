@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "R5oPK0QBj2EZo6MtG89lEVt/pcHN4MLIyGzSHDbASVl4A+EQIQhX/MEf8E2D50OVIQKVYt2QO8DhOcvApH3/og==",
+  "success": true,
+  "projectFilePath": "/home/vant/Documentos/TFG/TFG/PC/C#/bike/BIKE_C_sharp_Grafica/BIKE_C_sharp_Grafica.csproj",
+  "expectedPackageFiles": [
+    "/home/vant/.nuget/packages/bouncycastle.cryptography/2.1.1/bouncycastle.cryptography.2.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

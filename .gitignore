@@ -1,0 +1,64 @@
+# Archivos compilados de Java
+*.class
+
+# Archivos compilados de C/C++
+*.o
+*.out
+*.exe
+
+# Archivos CSV generados por pruebas
+*.csv
+*.png
+
+# Scripts de compilación/ejecución generados
+*.log
+
+# Directorios de salida
+/bin/
+/build/
+/obj/
+
+**/KATs/
+**/KAT/
+**/Supporting_Documentation/
+**/Hardware_Implementation/
+# Librerías externas
+/lib/
+/venv/
+/.idea/
+/.vscode/
+
+# === Archivos de simulación/verilog/VHDL ===
+*.svhd
+*.vhd
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Python generados
+__pycache__/
+*.pyc
+*.pyo
+**/FromNIST/
+
+
+# Archivos generados por JetBrains Toolbox
+jetbrains-toolbox.desktop
+
+# === Archivos de configuración y documentación que no quieres rastrear ===
+*.yml
+*.yaml
+*.md
+*.txt
+*.json
+*.xml
+*.jar
+*.rst
+*.rsp
+*.S
+*.h
+LICENSE
+SHA256SUMS
+*.pdf
+HQC_Round4/

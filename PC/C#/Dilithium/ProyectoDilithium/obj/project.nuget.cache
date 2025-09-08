@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "q8xkklHZFGiYB/POtjw6WuEEa9RJm1db27TDCbQrHjCsIa9EKkiqLedBuYzSHo/2uqZdTFV3y9SNJanykK5R3A==",
+  "success": true,
+  "projectFilePath": "/home/vant/Documentos/TFG/TFG/PC/C#/Dilithium/ProyectoDilithium/ProyectoDilithium.csproj",
+  "expectedPackageFiles": [
+    "/home/vant/.nuget/packages/bouncycastle.cryptography/2.2.1/bouncycastle.cryptography.2.2.1.nupkg.sha512"
+  ],
+  "logs": []
+}
