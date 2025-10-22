@@ -1,0 +1,47 @@
+Sí, es coherente 👍
+
+Te explico cómo encajan tus resultados de /usr/bin/time -v con el boxplot que muestras:
+
+1. Resultados de /usr/bin/time -v
+
+Reference: 20.25 s, 6 MB, 99% CPU.
+
+Optimized (AVX2): 21.18 s, 6 MB, 99% CPU.
+➡️ Vimos que los tiempos “totales” eran muy parecidos, incluso un poco peor en optimized.
+
+⚠️ Pero ojo: /usr/bin/time mide tiempo total de todo el ejecutable, que incluye:
+
+Inicialización.
+
+Lectura/escritura de ficheros (CSV).
+
+Todos los ciclos de pruebas seguidos.
+
+Por eso, los 20–21 segundos son un agregado global.
+
+2. Boxplot Reference vs AVX2
+
+El gráfico está desglosado por operación (Keygen, Enc, Dec, Total) en milisegundos por iteración.
+Ahí sí se ve que:
+
+AVX2 (Optimized) tiene tiempos claramente menores en Keygen, Enc y Dec.
+
+La dispersión de valores también es menor.
+
+El eje está en escala log, así que las diferencias son más notorias (por ejemplo, Keygen ~3 ms en reference vs ~2 ms en AVX2).
+
+3. ¿Por qué la aparente contradicción?
+
+No hay contradicción en realidad:
+
+El boxplot mide operaciones individuales repetidas miles de veces → ahí se aprecia la mejora de AVX2.
+
+El /usr/bin/time mide el tiempo global del programa → ese total incluye otras cosas (overhead de logging a CSV, escritura de ficheros, carga inicial, etc.) que pueden enmascarar la diferencia entre reference y AVX2 si solo miras un run.
+
+Si ejecutaras 1000 veces test_bike y promediaras los tiempos globales, deberías ver que la versión AVX2 acaba siendo más rápida en promedio (aunque solo un 5–15% de mejora global, no tanto como se ve en Enc).
+
+✅ Conclusión:
+
+El boxplot refleja mejor la diferencia real de rendimiento por operación → AVX2 gana.
+
+El resultado de /usr/bin/time es coherente, pero como incluye overhead externo y ruido de una sola ejecución, puede dar la impresión de empate.

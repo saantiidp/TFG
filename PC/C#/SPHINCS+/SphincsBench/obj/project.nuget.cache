@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "czWq3mvl7BBHFS2yGRKPzCzEj7pr1f1YLL0Hr87BjoFjp6a3s2L4FBp2gQDIyziiDkYS4sJFKtLCB30jDB8Mog==",
+  "success": true,
+  "projectFilePath": "/home/vant/Documentos/TFG/TFG/PC/C#/SPHINCS+/SphincsBench/SphincsBench.csproj",
+  "expectedPackageFiles": [
+    "/home/vant/.nuget/packages/bouncycastle.cryptography/2.6.2/bouncycastle.cryptography.2.6.2.nupkg.sha512"
+  ],
+  "logs": []
+}

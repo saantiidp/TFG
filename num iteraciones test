@@ -1,0 +1,38 @@
+C
+Bike 1000 iteraciones (ambos ref y avx2)
+Dilithium 1000 iteraciones (2, 3 y 5 y ambos ref y avx2)
+Falcon 1000 iteraciones (512 y 1024 y ref, avx2 y native)
+hqc 1000 iteraciones (128, 192 y 256 y ref y avx2)
+Kyber 1000 iteraciones (512, 768 y 1024 y ref y avx2)
+mceliece demasiado largo (200 iteraciones)
+sphincs 10 iteraciones
+
+
+C#
+Bike 1000 iteraciones
+Dilithium 1000 iteraciones
+Falcon 1000 iteraciones
+hqc 1000 iteraciones
+Kyber 1000 iteraciones
+mceliece 100 iteraciones
+sphincs 100 iteraciones
+
+
+Java
+Bike 1000 iteraciones
+Dilithium 1000 iteraciones
+Falcon 1000 iteraciones
+hqc 1000 iteraciones
+Kyber 1000 iteraciones
+mceliece 50 iteraciones
+sphincs 100 iteraciones
+
+
+Python
+Bike 100 iteraciones
+Dilithium 1000 iteraciones
+Falcon 50 iteraciones
+hqc 1000 iteraciones
+Kyber 1000 iteraciones
+mceliece 200 iteraciones
+sphincs 50 iteraciones

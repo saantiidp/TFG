@@ -1,0 +1,40 @@
+$ ./summarize_resources.sh opt
+CSV generado: runs_opt/mceliece_resources_opt.csv
+
+== Resumen por variante (impl=opt) ==
+Variant    n      Impl   Elapsed_mean Elapsed_sd   MaxRSS_mean  MaxRSS_sd   
+348864f    6      opt    11.238333    5.040144     3057         990         
+348864     13     opt    9.090000     11.603358    1918         1265        
+460896f    5      opt    22.400000    1.399957     4004         85          
+460896     5      opt    39.186000    1.925800     4056         61          
+6688128f   5      opt    44.866000    1.522729     5449         47          
+6688128    10     opt    55.626000    56.110487    3130         2218        
+6960119f   5      opt    51.674000    3.879183     5421         80          
+6960119    8      opt    79.056250    62.258531    3704         2163        
+8192128f   5      opt    46.530000    6.940988     5858         68          
+8192128    10     opt    50.449000    50.458081    3402         2477   
+
+
+
+
+
+
+
+Ya tienes un primer CSV de recursos para McEliece (impl=opt) y el resumen luce coherente. Te dejo todo “listo-para-pegar” y los siguientes pasos para cerrar esta parte del TFG.
+
+Texto para la memoria (PC/Linux)
+
+Para la obtención de los recursos que requieren los diferentes esquemas McEliece, se ejecutó cada benchmark atado a un único núcleo (taskset -c <cpu>) y se midieron recursos con /usr/bin/time -v. Este comando proporciona, entre otros, el Elapsed (wall clock) time, la Maximum resident set size (kbytes) y el %CPU. Las repeticiones por caso se agregaron con un script que calcula media y desviación estándar, generando un CSV consolidado por variante e implementación.
+
+Texto para la memoria (Android)
+
+En Android Studio se utilizó Profiler con un dispositivo físico (modo desarrollador + depuración USB). Profiler permitió medir en tiempo real CPU y memoria durante las pruebas, obteniendo trazas que complementan las medidas en PC/Linux.
+
+
+CSV consolidado: runs_opt/mceliece_resources_opt.csv
+
+Notas rápidas de lectura
+
+Las variantes “f” suelen ser más rápidas (p.ej. 460896f vs 460896), como se ve en los tiempos medios.
+
+Las desviaciones estándar grandes (p.ej. 348864 y 6688128) indican variabilidad de ejecución; si necesitas más estabilidad estadística, sube las repeticiones (p. ej., 20).

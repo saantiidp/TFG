@@ -1,38 +1,63 @@
-# plot_falcon_boxplot_por_operacion_colores.py
-import os, re, numpy as np, pandas as pd
+# plot_falcon_boxplots_por_operacion.py
+import os, re
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from glob import glob
 from matplotlib.patches import Patch
 
-# Paleta fija por versión (si falta alguna, se asigna automáticamente)
+# Nombres bonitos y orden
+PRETTY = {
+    "falcon512":              "falcon512",
+    "falcon512avx2":          "falconavx2_512",
+    "falcon512avx2native":    "nativefalcon512avx2",
+    "falcon1024":             "falcon1024",
+    "falcon1024avx2":         "falconavx2_1024",
+    "falcon1024avx2native":   "nativefalcon1024avx2",
+}
+
+ORDER = [
+    "falcon512",
+    "falcon512avx2native",
+    "falcon512avx2",
+    "falcon1024",
+    "falcon1024avx2native",
+    "falcon1024avx2",
+]
+
 PALETTE = {
-    "falcon512":      "#1f77b4",
-    "falcon512avx2":  "#ff7f0e",
-    "falcon1024":     "#2ca02c",
-    "falcon1024avx2": "#d62728",
+    "falcon512":            "#1f77b4",
+    "falcon512avx2native":  "#2ca02c",
+    "falcon512avx2":        "#9467bd",
+    "falcon1024":           "#8c564b",
+    "falcon1024avx2native": "#17becf",
+    "falcon1024avx2":       "#ff7f0e",
 }
 
 def parse_falcon_csv(path):
+    """
+    Intenta leer filas del CSV en el formato:
+    Iter, KeygenCycles, Keygen ms, SignCycles, Sign ms, VerifyCycles, Verify ms, Total ms
+    Tolera texto extra en cada celda (extrae el primer número).
+    """
     rows = []
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
         for line in f:
             line = line.strip()
-            if (not line) or ("," not in line):
+            if not line or "," not in line:
                 continue
             parts = [p.strip() for p in line.split(",")]
             if len(parts) < 8:
                 continue
-            ms_idx = [2,4,6,7]
-            ok, vals = True, []
+            vals = []
             for i in range(8):
                 m = re.search(r"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?", parts[i])
                 vals.append(float(m.group(0)) if m else np.nan)
-                if i in ms_idx and (not np.isfinite(vals[-1]) or vals[-1] <= 0):
-                    ok = False
-            if ok:
+            # filtra filas sin ms válidos
+            if all(np.isfinite([vals[2], vals[4], vals[6], vals[7]])):
                 rows.append(vals[:8])
     if not rows:
-        raise ValueError(f"No data rows parsed from {path}")
+        raise ValueError(f"Sin datos válidos en {path}")
     return pd.DataFrame(rows, columns=[
         "Iteración",
         "Keygen Cycles","Keygen ms",
@@ -41,24 +66,10 @@ def parse_falcon_csv(path):
         "Total ms"
     ])
 
-def ensure_colors(versions):
-    # Asignar colores consistentes; si hay nuevas versiones, usar Tab10
-    colors = {}
-    tab10 = plt.get_cmap("tab10")
-    auto_i = 0
-    for v in versions:
-        if v in PALETTE:
-            colors[v] = PALETTE[v]
-        else:
-            colors[v] = tab10(auto_i % 10)
-            auto_i += 1
-    return colors
-
-def main(pattern="falcon*.csv", out_png="comparacion_falcon_boxplot_por_operacion.png", title=None):
+def load_all(pattern="falcon*.csv"):
     files = sorted(glob(pattern))
     if not files:
         raise SystemExit(f"No se encontraron archivos con patrón {pattern}")
-
     data = {}
     for fp in files:
         name = os.path.basename(fp).replace(".csv","")
@@ -66,73 +77,71 @@ def main(pattern="falcon*.csv", out_png="comparacion_falcon_boxplot_por_operacio
             data[name] = parse_falcon_csv(fp)
         except Exception as e:
             print(f"[!] {name}: {e}")
-
     if not data:
         raise SystemExit("No se pudo cargar ningún CSV válido.")
+    return data
 
-    versions = list(data.keys())
+def ensure_colors(versions):
+    colors = {}
+    tab = plt.get_cmap("tab10")
+    i = 0
+    for v in versions:
+        colors[v] = PALETTE.get(v, tab(i % 10))
+        i += 1
+    return colors
+
+def boxplot_por_operacion(data, ylog=True, out_dir=".", dpi=160):
+    # versiones en orden, ignorando faltantes y añadiendo extras al final
+    versions = [v for v in ORDER if v in data] + [v for v in data if v not in ORDER]
     colors = ensure_colors(versions)
 
-    operations = [
-        ("Keygen ms","Keygen"),
-        ("Sign ms","Sign"),
-        ("Verify ms","Verify"),
-        ("Total ms","Total")
+    ops = [
+        ("Keygen ms",  "Boxplot_Falcon_Keygen.png",  "Keygen"),
+        ("Sign ms",    "Boxplot_Falcon_Sign.png",    "Sign"),
+        ("Verify ms",  "Boxplot_Falcon_Verify.png",  "Verify"),
+        ("Total ms",   "Boxplot_Falcon_Total.png",   "Total"),
     ]
 
-    # Preparar datos en el orden de versiones
-    op_vals = {label: [ data[v][col].dropna().values for v in versions ]
-               for col, label in operations}
+    for col, fname, nice in ops:
+        series = [data[v][col].dropna().values for v in versions]
+        labels = [PRETTY.get(v, v) for v in versions]
+        cols   = [colors[v] for v in versions]
 
-    # --- Plot ---
-    plt.figure(figsize=(14,6))
-    group_gap, box_width = 1.3, 0.28
-    centers = np.arange(len(operations)) * group_gap + 1.0
-    positions, series = [], []
+        plt.figure(figsize=(10,6))
+        bp = plt.boxplot(
+            series,
+            labels=labels,
+            showfliers=True,
+            patch_artist=True,
+            medianprops=dict(linewidth=2, color="black"),
+            whiskerprops=dict(linewidth=1.5),
+            capprops=dict(linewidth=1.5),
+            boxprops=dict(linewidth=1.5),
+        )
+        for box, c in zip(bp["boxes"], cols):
+            box.set_facecolor(c)
+            box.set_edgecolor(c)
+            box.set_alpha(0.55)
 
-    for gi, (_, label) in enumerate(operations):
-        offs = np.linspace(-box_width*(len(versions)-1), box_width*(len(versions)-1), len(versions)) / 2
-        for vi, v in enumerate(versions):
-            positions.append(centers[gi] + offs[vi])
-            series.append(op_vals[label][vi])
+        plt.ylabel("Tiempo (ms)")
+        plt.title(f"Falcon – {nice}")
+        if ylog:
+            plt.yscale("log")
+        plt.grid(True, axis="y", which="both", ls="--", alpha=0.5)
 
-    bp = plt.boxplot(
-        series,
-        positions=positions,
-        widths=box_width*0.95,
-        showfliers=True,
-        patch_artist=True,
-        medianprops=dict(linewidth=2, color="black"),
-        whiskerprops=dict(linewidth=1.5),
-        capprops=dict(linewidth=1.5),
-        boxprops=dict(linewidth=1.5)
-    )
+        # Leyenda compacta (solo colores por versión)
+        legend_handles = [Patch(facecolor=colors[v], edgecolor=colors[v], alpha=0.55,
+                                label=PRETTY.get(v,v)) for v in versions]
+        plt.legend(handles=legend_handles, title="Versión", loc="upper right", ncol=1)
+        plt.tight_layout()
+        out_path = os.path.join(out_dir, fname)
+        plt.savefig(out_path, dpi=dpi)
+        plt.close()
+        print(f"Guardado: {out_path}")
 
-    # Pintar cada caja según su versión
-    for i, box in enumerate(bp["boxes"]):
-        v = versions[i % len(versions)]
-        box.set_facecolor(colors[v])
-        box.set_edgecolor(colors[v])
-        box.set_alpha(0.55)           # más legible
-    for flier in bp["fliers"]:
-        flier.set_alpha(0.8)
-        flier.set_markersize(3)
-
-    plt.xticks(centers, [label for _, label in operations])
-    plt.yscale("log")
-    plt.ylabel("Tiempo (ms)")
-    plt.xlabel("Operación")
-    plt.title(title or "Falcon - Comparación por operación")
-    plt.grid(True, which="both", axis="y", ls="--", alpha=0.5)
-
-    # Leyenda con los mismos colores
-    legend_handles = [Patch(facecolor=colors[v], edgecolor=colors[v], alpha=0.55, label=v)
-                      for v in versions]
-    plt.legend(handles=legend_handles, title="Versión", loc="upper left", ncol=1)
-
-    plt.tight_layout()
-    plt.savefig(out_png, dpi=150)
-    print(f"Guardado: {out_png}")
+def main():
+    data = load_all("falcon*.csv")
+    boxplot_por_operacion(data, ylog=True, out_dir=".")
 
 if __name__ == "__main__":
     main()

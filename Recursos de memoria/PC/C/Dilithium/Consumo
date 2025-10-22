@@ -1,0 +1,7 @@
+LENGUAJE,VERSIÓN,TIEMPO TOTAL DE EJECUCIÓN (s),USO CPU (%),MEMORIA RESIDENTE USO MÁXIMO (kB)
+C,Dilithium-2 avx2,0.16,100.0,2890
+C,Dilithium-2 ref,0.92,99.0,2858
+C,Dilithium-3 avx2,0.26,99.0,2806
+C,Dilithium-3 ref,0.94,99.5,2850
+C,Dilithium-5 avx2,0.38,98.0,2764
+C,Dilithium-5 ref,0.99,99.5,2742

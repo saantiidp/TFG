@@ -9,8 +9,8 @@
 .POSIX:
 ################### -------------------------------------_>>>>>>>>>>>>>>>>>>>>>>>>>>> AÑADIMOS  --march=native EN LOS CASOS QUE USAMOS AVX2
 CC = gcc
-#CFLAGS = -W -Wall -O2 -w -mavx2 ORIGINAL
-CFLAGS = -W -Wall -O2 -w -march=native
+CFLAGS = -W -Wall -O2 -w #-mavx2 ORIGINAL
+#CFLAGS = -W -Wall -O2 -w -march=native
 LIBFLAGS = -lcrypto -lm
 LD = c99
 LDFLAGS = 

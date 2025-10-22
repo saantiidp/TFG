@@ -568,6 +568,87 @@ class PQC_KotlinTest {
 
         return Pair("""TiempoTotal: $globalStats""".trimIndent(), totalTimes)
     }
+    /********** PRUEBAS Classic McEliece ******************************************************************************************************/
+    @Test
+    fun testMcEliecePerformance() {
+        val versions = listOf(
+            "McE-348864"   to McElieceParameterSpec.mceliece348864,
+            "McE-460896"   to McElieceParameterSpec.mceliece460896,
+            "McE-6688128"  to McElieceParameterSpec.mceliece6688128
+            // Si quieres también las “fast”: 
+            // "McE-348864f"  to McElieceParameterSpec.mceliece348864f,
+            // "McE-460896f"  to McElieceParameterSpec.mceliece460896f,
+            // "McE-6688128f" to McElieceParameterSpec.mceliece6688128f
+        )
+        val numIterations = 1000
+        val results = mutableMapOf<String, String>()
+        val iterationResults = mutableMapOf<String, List<Double>>()
+
+        versions.forEach { (name, spec) ->
+            println("\nEjecutando pruebas para $name")
+            val (stats, iterationTimes) = runMcElieceTest(name, spec, numIterations)
+            results[name] = stats
+            iterationResults[name] = iterationTimes
+        }
+
+        showResultsToTerminal(results, iterationResults)
+    }
+
+    private fun runMcElieceTest(
+        name: String,
+        spec: java.security.spec.AlgorithmParameterSpec,
+        numIterations: Int
+    ): Pair<String, List<Double>> {
+        val keyGenTimes = mutableListOf<Double>()
+        val encapTimes  = mutableListOf<Double>()
+        val decapTimes  = mutableListOf<Double>()
+        val totalTimes  = mutableListOf<Double>()
+
+        val kpg    = KeyPairGenerator.getInstance("McEliece", BouncyCastlePQCProvider.PROVIDER_NAME)
+        kpg.initialize(spec)
+        val keyGen = javax.crypto.KeyGenerator.getInstance("McEliece", BouncyCastlePQCProvider.PROVIDER_NAME)
+
+        repeat(numIterations) { iteration ->
+            lateinit var keyPair: java.security.KeyPair
+            val t1 = kotlin.system.measureNanoTime {
+                keyPair = kpg.generateKeyPair()
+            } / 1_000_000.0
+
+            lateinit var sender: SecretKeyWithEncapsulation
+            val t2 = kotlin.system.measureNanoTime {
+                val kemSpec = KEMGenerateSpec(keyPair.public, "AES")
+                keyGen.init(kemSpec)
+                sender = keyGen.generateKey() as SecretKeyWithEncapsulation
+            } / 1_000_000.0
+
+            val t3 = kotlin.system.measureNanoTime {
+                val kemSpec = KEMExtractSpec(keyPair.private, sender.encapsulation, "AES")
+                keyGen.init(kemSpec)
+                keyGen.generateKey()
+            } / 1_000_000.0
+
+            val total = t1 + t2 + t3
+            if (iteration >= 10) { // warm-up
+                keyGenTimes.add(t1)
+                encapTimes.add(t2)
+                decapTimes.add(t3)
+                totalTimes.add(total)
+            }
+        }
+
+        val keyGenStats = calculateStats(keyGenTimes)
+        val encapStats  = calculateStats(encapTimes)
+        val decapStats  = calculateStats(decapTimes)
+        val globalStats = calculateStats(totalTimes)
+
+        println("\n🔹 Resultados Globales para $name:")
+        println("Tiempo total generación de claves: $keyGenStats ms")
+        println("Tiempo total encapsulación: $encapStats ms")
+        println("Tiempo total descapsulación: $decapStats ms")
+        println("Tiempo total**: $globalStats ms")
+
+        return Pair("""TiempoTotal: $globalStats""".trimIndent(), totalTimes)
+    }
 
     /***********Funciones para el cálculo de la media y la desviación típica y mostrar resultados******/
     // Función para calcular la media y la desv estandar

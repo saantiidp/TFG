@@ -1,0 +1,15 @@
+\begin{table}
+\centering
+\caption{Consumo de recursos de FALCON (implementación en C).}
+\label{tab:falcon_c_recursos}
+\begin{tabular}{llrrr}
+\toprule
+LENGUAJE &          VERSIÓN &  TIEMPO TOTAL DE EJECUCIÓN (segundos) &  USO CPU (%) &  MEMORIA RESIDENTE USO MÁXIMO (kbytes) \\
+\midrule
+       C &       FALCON-512 &                                 32.63 &           99 &                                   2139 \\
+       C &      FALCON-1024 &                                 69.15 &           99 &                                   2202 \\
+       C &  FALCON-512 avx2 &                                 20.31 &           99 &                                   2078 \\
+       C & FALCON-1024 avx2 &                                 34.58 &           99 &                                   2066 \\
+\bottomrule
+\end{tabular}
+\end{table}

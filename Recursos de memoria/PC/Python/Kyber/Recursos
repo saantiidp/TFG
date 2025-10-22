@@ -1,0 +1,6 @@
+LENGUAJE,VERSIÓN,"TIEMPO TOTAL DE
+EJECUCIÓN (segundos)",USO CPU (%),"MEMORIA RESIDENTE USO
+MÁXIMO (kbytes)"
+Python,Kyber Python 512,0.52,4%,8744
+Python,Kyber Python 768,0.53,5%,8829
+Python,Kyber Python 1024,0.52,4%,8839
