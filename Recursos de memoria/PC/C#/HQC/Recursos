@@ -1,6 +1,0 @@
-| LENGUAJE | VERSIÓN (comando)      | TIEMPO TOTAL EJECUCIÓN (segundos) | USO CPU (%) | MEMORIA RESIDENTE USO MÁXIMO (kbytes) |
-| -------- | ---------------------- | --------------------------------: | ----------: | ------------------------------------: |
-| C#       | HQC (–-variant hqc128) |                        **320.65** |      **99** |                             **46756** |
-| C#       | HQC (–-variant hqc192) |                        **226.26** |      **99** |                             **46932** |
-| C#       | HQC (–-variant hqc256) |                        **230.39** |      **99** |                             **46548** |
-

@@ -1,6 +1,0 @@
-LENGUAJE,VERSIÓN,"TIEMPO TOTAL DE
-EJECUCIÓN (segundos)",USO CPU (%),"MEMORIA RESIDENTE USO
-MÁXIMO (kbytes)"
-C#,Dilithium C# 2.0,6.27,100%,47831
-C#,Dilithium C# 3.0,6.16,101%,48725
-C#,Dilithium C# 5.0,5.91,101%,48360

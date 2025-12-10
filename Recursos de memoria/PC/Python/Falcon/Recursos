@@ -1,6 +1,0 @@
-LENGUAJE,VERSIÓN,"TIEMPO TOTAL DE
-EJECUCIÓN (segundos)",USO CPU (%),"MEMORIA RESIDENTE USO
-MÁXIMO (kbytes)"
-Python,Falcon Python 512,0.21,22%,12740
-Python,Falcon Python 1024,0.29,20%,12732
-
