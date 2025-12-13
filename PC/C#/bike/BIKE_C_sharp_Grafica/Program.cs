@@ -25,7 +25,7 @@ namespace BIKE_C_sharp_Grafica
                 EjecutarPruebas(version, 1000);
             }
 
-            Console.WriteLine("\nPruebas completadas.");
+            Console.WriteLine("\n✅ Pruebas completadas.");
         }
 
         static void EjecutarPruebas(string version, int iteraciones)
@@ -84,7 +84,7 @@ namespace BIKE_C_sharp_Grafica
                 writer.WriteLine($"{i + 1},{version},{tKeyGen:F4},{tEncaps:F4},{tDecaps:F4},{tTotal:F4}");
             }
 
-            Console.WriteLine($"Resultados exportados a '{csvName}'");
+            Console.WriteLine($"📄 Resultados exportados a '{csvName}'");
             MostrarEstadisticas("KeyGen", keygenTimes);
             MostrarEstadisticas("Encapsulación", encapsTimes);
             MostrarEstadisticas("Decapsulación", decapsTimes);
