@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     printf("🔹 Usando parámetros BIKE-256 (Level 5)\n");
 #else
     int variant = 128;
-    printf("⚠️ Versión no definida, usando BIKE-128 por defecto.\n");
+    printf("Versión no definida, usando BIKE-128 por defecto.\n");
 #endif
 
     printf("=== BIKE Benchmark (%d iteraciones) ===\n", ntests);
